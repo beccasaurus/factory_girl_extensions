@@ -46,6 +46,25 @@ module FactoryGirl
         yield(instance) if block_given?
         instance
       end
+      
+      def generate(*args, &block)
+        factory, overrides = ObjectMethods.factory_and_overrides(name.underscore, args)
+        instance = factory.run(Strategy::Build, overrides)
+        instance.save
+        yield(instance) if block_given?
+        instance
+      end
+
+      def generate!(*args, &block)
+        factory, overrides = ObjectMethods.factory_and_overrides(name.underscore, args)
+        instance = factory.run(Strategy::Build, overrides)
+        instance.save!
+        yield(instance) if block_given?
+        instance
+      end
+
+      alias gen  generate
+      alias gen! generate!
     end
   end
 end
