@@ -26,6 +26,7 @@ class Dog
 
   def save!
     raise "Called save!" unless name == "Valid Name"
+    self.saved = true
   end
 end
 
@@ -122,7 +123,7 @@ describe FactoryGirl::Syntax::ObjectMethods do
       expect { Dog.gen!      }.to raise_error(RuntimeError, /Called save!/)
 
       Dog.gen!(:name => "Valid Name").name.should == "Valid Name"
-      Dog.gen!(:name => "Valid"){|d| d.name += " Name" }.name.should == "Valid Name"
+      Dog.gen!(:name => "Valid Name"){|d| d.name += " FOO" }.name.should == "Valid Name FOO"
     end
 
     it "without arguments" do
@@ -135,9 +136,18 @@ describe FactoryGirl::Syntax::ObjectMethods do
       @dog.name.should == "Spot"
     end
 
-    it "yields the built instance to block" do
-      @dog = Dog.generate(:name => "Spot"){|d| d.name += " Remover" }
+    it "yields the built instance to block (after calling #save on it)" do
+      @dog = Dog.generate(:name => "Spot") do |dog|
+        dog.should be_saved
+        dog.name += " Remover"
+      end
       @dog.name.should == "Spot Remover"
+    end
+
+    it "generate! yields the resulting instance (after calling save! on it)" do
+      Dog.gen!(:name => "Valid Name") do |dog|
+        dog.should be_saved
+      end
     end
 
     it "with prefix" do

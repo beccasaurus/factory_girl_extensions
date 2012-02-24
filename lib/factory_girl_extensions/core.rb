@@ -43,7 +43,7 @@ module FactoryGirl
     #     # ...do something with user...
     #   end
     #
-    #   # Generates and returns a Hash of attributes from this factory 
+    #   # Creates and returns a Hash of attributes from this factory 
     #   # (same as FactoryGirl.attributes_for).
     #   User.attributes
     #
@@ -83,24 +83,29 @@ module FactoryGirl
     # This syntax was derived from remi Taylor's factory_girl_extensions.
     module ObjectMethods
       
+      # Creates an unsaved instance (same as FactoryGirl.build)
       def build(*args, &block)
         factory, overrides = ObjectMethods.factory_and_overrides(name.underscore, args)
         instance = factory.run(Strategy::Build, overrides, &block)
         instance
       end
       
+      # Creates a saved instance without raising (same as saving the result of FactoryGirl.build)
       def generate(*args, &block)
-        instance = build(*args, &block)
+        instance = build(*args)
         instance.save
+        yield instance if block_given?
         instance
       end
 
+      # Creates a saved instance and raises when invalid (same as FactoryGirl.create)
       def generate!(*args, &block)
-        instance = build(*args, &block)
-        instance.save!
+        factory, overrides = ObjectMethods.factory_and_overrides(name.underscore, args)
+        instance = factory.run(Strategy::Create, overrides, &block)
         instance
       end
 
+      # Creates and returns a Hash of attributes from this factory (same as FactoryGirl.attributes_for)
       def attributes(*args, &block)
         factory, overrides = ObjectMethods.factory_and_overrides(name.underscore, args)
         attrs = factory.run(Strategy::AttributesFor, overrides, &block)
