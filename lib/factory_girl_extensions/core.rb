@@ -102,30 +102,49 @@ module FactoryGirl
       alias gen!  generate!
 
       # @private
+      #
+      # Helper to get the Factory object and overrides hash from the arguments passed to any ObjectMethods.
       def self.factory_and_overrides(base_name, args)
         overrides = args.last.is_a?(Hash) ? args.pop : {}
         factory   = find_factory(base_name, args)
-
+        raise ArgumentError.new("Could not find factory for #{base_name.inspect} with #{args.inspect}") unless factory
         [factory, overrides]
       end
 
       # @private
-      def self.find_factory(base_name, prefix_and_suffix)
-        case prefix_and_suffix.length
+      #
+      # Given the base_name for a class's factory and 0-2 parts (prefix/suffixes), 
+      # this finds the first matching factory that FactoryGirl has in its registry.
+      def self.find_factory(base_name, parts)
+        case parts.length
         when 0
-          FactoryGirl.factory_by_name(base_name)
+          detect_factory base_name
         when 1
-          begin
-            FactoryGirl.factory_by_name([prefix_and_suffix.first, base_name].join("_"))
-          rescue ArgumentError => ex
-            raise ex unless ex.message =~ /Factory not registered/
-            FactoryGirl.factory_by_name([base_name, prefix_and_suffix.first].join("_"))
-          end
+          detect_factory "#{parts.first}_#{base_name}", "#{base_name}_#{parts.first}"
         when 2
-          FactoryGirl.factory_by_name([prefix_and_suffix.first, base_name, prefix_and_suffix.last].join("_"))
+          detect_factory "#{parts.first}_#{base_name}_#{parts.last}", "#{parts.last}_#{base_name}_#{parts.first}"
         else
-          raise ArgumentError.new("Don't know how to find factory for #{base_name.inspect} with #{prefix_and_suffix.inspect}")
+          raise ArgumentError.new("Don't know how to find factory for #{base_name.inspect} with #{parts.inspect}")
         end
+      end
+
+      # @private
+      #
+      # Given any number of arguments representing the possible names for a factory that you 
+      # want to find, this iterates over the given names and returns the first FactoryGirl 
+      # factory object that FactoryGirl returns (skipping unregistered factory names).
+      def self.detect_factory(*possible_factory_names)
+        factory = nil
+        possible_factory_names.each do |factory_name|
+          begin
+            factory = FactoryGirl.factory_by_name(factory_name)
+            break
+          rescue ArgumentError => e
+            raise e unless e.message =~ /Factory not registered/
+            next
+          end
+        end
+        factory
       end
     end
   end

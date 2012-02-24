@@ -73,6 +73,12 @@ end
 
 describe FactoryGirl::Syntax::ObjectMethods do
 
+  it "raises useful Exception when no matching factory can be found" do
+    expect { Dog.build(:foo, :bar)      }.to raise_error(ArgumentError, %{Could not find factory for "dog" with [:foo, :bar]})
+    expect { Dog.generate(:foo, :bar)   }.to raise_error(ArgumentError, %{Could not find factory for "dog" with [:foo, :bar]})
+    expect { Dog.attributes(:foo, :bar) }.to raise_error(ArgumentError, %{Could not find factory for "dog" with [:foo, :bar]})
+  end
+
   describe "#build" do
     after do
       @dog.should_not be_saved if @dog
@@ -108,8 +114,13 @@ describe FactoryGirl::Syntax::ObjectMethods do
       @dog.name.should == "Awesome Dog with toys"
     end
 
+    it "with prefix and suffix (reversed works too)" do
+      @dog = Dog.build(:with_toys, :awesome)
+      @dog.name.should == "Awesome Dog with toys"
+    end
+
     it "cannot pass more than 2 prefix/suffix" do
-      expect { Dog.build(:one, :two, :three) }.to raise_error(ArgumentError, /Don't know how to find factory for "dog" with \[:one, :two, :three\]/)
+      expect { Dog.build(:one, :two, :three) }.to raise_error(ArgumentError, %{Don't know how to find factory for "dog" with [:one, :two, :three]})
     end
   end
 
@@ -171,8 +182,13 @@ describe FactoryGirl::Syntax::ObjectMethods do
       @dog.name.should == "Awesome Dog with toys"
     end
 
+    it "with prefix and suffix (reversed works too)" do
+      @dog = Dog.generate(:with_toys, :awesome)
+      @dog.name.should == "Awesome Dog with toys"
+    end
+
     it "cannot pass more than 2 prefix/suffix" do
-      expect { Dog.generate(:one, :two, :three) }.to raise_error(ArgumentError, /Don't know how to find factory for "dog" with \[:one, :two, :three\]/)
+      expect { Dog.generate(:one, :two, :three) }.to raise_error(ArgumentError, %{Don't know how to find factory for "dog" with [:one, :two, :three]})
     end
   end
 
@@ -205,8 +221,12 @@ describe FactoryGirl::Syntax::ObjectMethods do
       Dog.attributes(:awesome, :with_toys).should == { :name => "Awesome Dog with toys" }
     end
 
+    it "with prefix and suffix (reversed works too)" do
+      Dog.attributes(:with_toys, :awesome).should == { :name => "Awesome Dog with toys" }
+    end
+
     it "cannot pass more than 2 prefix/suffix" do
-      expect { Dog.attributes(:one, :two, :three) }.to raise_error(ArgumentError, /Don't know how to find factory for "dog" with \[:one, :two, :three\]/)
+      expect { Dog.attributes(:one, :two, :three) }.to raise_error(ArgumentError, %{Don't know how to find factory for "dog" with [:one, :two, :three]})
     end
   end
 end
