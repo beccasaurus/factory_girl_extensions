@@ -1,6 +1,6 @@
 # FactoryGirl extensions
 
-factory_girl_extensions is a simple set of extensions that I typically like to use on projects, when using factory_girl.
+factory_girl_extensions is a simple set of syntax extensions that I typically like to use on projects when using factory_girl.
 
 ## Install
 
@@ -96,6 +96,14 @@ User.gen.should do_some_stuff_with(:things)
 When you syntax highlight the above code, the constants (model names) are usually 
 the things that really jump out at you.  Even in plain text, it's easier to 
 understand that code than the above `FactoryGirl(:code)` in my opinion.
+
+## Dude, why isn't this stuff included in the official FactoryGirl gem as an alternative syntax?
+
+Originally, when I made this, not many people were using this syntax.
+
+Now that I know many people using this syntax, I may send a pull request to FactoryGirl to see if they would consider accepting this.
+
+As of factory_girl_extensions 2.0, the code is actually written in the same style as official syntaxes, so it should be very easy to include this into the official FactoryGirl gem.
 
 ## License
 
