@@ -12,6 +12,7 @@ As of version 2.0, factory_girl_extensions now targets the new FactoryGirl 2.0 A
 
  - Only FactoryGirl 2.0+ is supported now.  If you are using an older version of FactoryGirl, please use factory_girl_extensions < 2.0
  - You can no longer use `:email.next` to generate the next :email sequence.  factory_girl_extensions no longer includes custom sequence code (because this feature wasn't heavily used and the new FactoryGirl inline sequences are pretty awesome)
+ - The code has been updated to be Ruby 1.8/1.9 compatible and now follows the same patterns as other official FactoryGirl alternative syntaxes
 
 ## Usage
 
