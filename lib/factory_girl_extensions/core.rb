@@ -27,12 +27,10 @@ module FactoryGirl
     #     end
     #   end
     #   
-    #   # Creates a saved instance without raising (same as saving the result
-    #   # of FactoryGirl.build)
+    #   # Creates a saved instance without raising (same as saving the result of FactoryGirl.build)
     #   User.generate(:name => 'Johnny')
     #   
-    #   # Creates a saved instance and raises when invalid (same as
-    #   # FactoryGirl.create)
+    #   # Creates a saved instance and raises when invalid (same as FactoryGirl.create)
     #   User.generate!
     #   
     #   # Creates an unsaved instance (same as FactoryGirl.build)
@@ -43,8 +41,7 @@ module FactoryGirl
     #     # ...do something with user...
     #   end
     #
-    #   # Creates and returns a Hash of attributes from this factory 
-    #   # (same as FactoryGirl.attributes_for).
+    #   # Creates and returns a Hash of attributes from this factory (same as FactoryGirl.attributes_for).
     #   User.attributes
     #
     #   # A few short aliases are included for convenience.
