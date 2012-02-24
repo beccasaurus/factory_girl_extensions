@@ -12,6 +12,37 @@ module FactoryGirl
     #   ...
     #
     module ObjectMethods
+      
+      def build(*args, &block)
+        factory, overrides = ObjectMethods.factory_and_overrides(name.underscore, args)
+        instance = factory.run(Strategy::Build, overrides)
+        yield(instance) if block_given?
+        instance
+      end
+      
+      def generate(*args, &block)
+        factory, overrides = ObjectMethods.factory_and_overrides(name.underscore, args)
+        instance = factory.run(Strategy::Build, overrides, &block)
+        instance.save
+        instance
+      end
+
+      def generate!(*args, &block)
+        factory, overrides = ObjectMethods.factory_and_overrides(name.underscore, args)
+        instance = factory.run(Strategy::Build, overrides, &block)
+        instance.save!
+        instance
+      end
+
+      def attributes(*args, &block)
+        factory, overrides = ObjectMethods.factory_and_overrides(name.underscore, args)
+        attrs = factory.run(Strategy::AttributesFor, overrides, &block)
+        attrs
+      end
+
+      alias attrs attributes
+      alias gen   generate
+      alias gen!  generate!
 
       # @private
       def self.factory_and_overrides(base_name, args)
@@ -39,32 +70,6 @@ module FactoryGirl
           raise ArgumentError.new("Don't know how to find factory for #{base_name.inspect} with #{prefix_and_suffix.inspect}")
         end
       end
-      
-      def build(*args, &block)
-        factory, overrides = ObjectMethods.factory_and_overrides(name.underscore, args)
-        instance = factory.run(Strategy::Build, overrides)
-        yield(instance) if block_given?
-        instance
-      end
-      
-      def generate(*args, &block)
-        factory, overrides = ObjectMethods.factory_and_overrides(name.underscore, args)
-        instance = factory.run(Strategy::Build, overrides)
-        instance.save
-        yield(instance) if block_given?
-        instance
-      end
-
-      def generate!(*args, &block)
-        factory, overrides = ObjectMethods.factory_and_overrides(name.underscore, args)
-        instance = factory.run(Strategy::Build, overrides)
-        instance.save!
-        yield(instance) if block_given?
-        instance
-      end
-
-      alias gen  generate
-      alias gen! generate!
     end
   end
 end

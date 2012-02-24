@@ -16,9 +16,17 @@ class Dog
 
   attr_accessor :name, :saved
 
-  def save()   self.saved = true    end
-  def saved?() saved == true        end
-  def save!()  raise "Called save!" end
+  def save
+    self.saved = true
+  end
+
+  def saved?
+    saved == true
+  end
+
+  def save!
+    raise "Called save!" unless name == "Valid Name"
+  end
 end
 
 # Example factories
@@ -112,6 +120,9 @@ describe FactoryGirl::Syntax::ObjectMethods do
     it "can call with a bang to save! (to raise an Exception on failure)" do
       expect { Dog.generate! }.to raise_error(RuntimeError, /Called save!/)
       expect { Dog.gen!      }.to raise_error(RuntimeError, /Called save!/)
+
+      Dog.gen!(:name => "Valid Name").name.should == "Valid Name"
+      Dog.gen!(:name => "Valid"){|d| d.name += " Name" }.name.should == "Valid Name"
     end
 
     it "without arguments" do
@@ -146,6 +157,40 @@ describe FactoryGirl::Syntax::ObjectMethods do
 
     it "cannot pass more than 2 prefix/suffix" do
       expect { Dog.generate(:one, :two, :three) }.to raise_error(ArgumentError, /Don't know how to find factory for "dog" with \[:one, :two, :three\]/)
+    end
+  end
+
+  describe "#attributes" do
+    it "without arguments" do
+      Dog.attributes.should == { :name => "Rover" }
+    end
+
+    it "can call #attrs as a shortcut" do
+      Dog.attrs.should == { :name => "Rover" }
+    end
+
+    it "with overrides" do
+      Dog.attributes(:name => "Spot").should == { :name => "Spot" }
+    end
+
+    it "yields the built instance to block" do
+      Dog.attributes(:name => "Spot"){|hash| hash[:name] += " Remover" }.should == { :name => "Spot Remover" }
+    end
+
+    it "with prefix" do
+      Dog.attributes(:awesome).should == { :name => "Awesome Dog" }
+    end
+
+    it "with suffix" do
+      Dog.attributes(:with_toys).should == { :name => "Dog with toys" }
+    end
+
+    it "with prefix and suffix" do
+      Dog.attributes(:awesome, :with_toys).should == { :name => "Awesome Dog with toys" }
+    end
+
+    it "cannot pass more than 2 prefix/suffix" do
+      expect { Dog.attributes(:one, :two, :three) }.to raise_error(ArgumentError, /Don't know how to find factory for "dog" with \[:one, :two, :three\]/)
     end
   end
 end
