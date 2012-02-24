@@ -61,7 +61,13 @@ describe Dog do
     dog.save
     dog.saved?.should == true
 
+    dog.saved = false
     expect { dog.save! }.to raise_error(RuntimeError, /Called save!/)
+    dog.saved?.should == false
+
+    dog.name = "Valid Name" # this let's you call save!
+    dog.save!
+    dog.saved?.should == true
   end
 end
 
