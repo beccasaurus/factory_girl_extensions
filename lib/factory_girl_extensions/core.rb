@@ -10,20 +10,8 @@ module FactoryGirl
     #   require 'factory_girl_extensions'
     #
     #   FactoryGirl.define do
-    #     factory :admin_user, :class => User do
-    #       name 'Billy Bob'
-    #       is_admin true
-    #     end
-    #
-    #     factory :user_with_profile, :class => User do
-    #       name 'Admin Bob'
-    #       profile_complete true
-    #     end
-    #
-    #     factory :admin_user_with_profile, :class => User do
-    #       name 'Admin Bob'
-    #       is_admin true
-    #       profile_complete true
+    #     factory :user do
+    #       name 'Bob Smith'
     #     end
     #   end
     #   
