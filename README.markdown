@@ -88,8 +88,8 @@ I don't care about `Factory`, I care about the actual models!  I prefer:
 
 ```ruby
 User.gen.should be_valid
-Name.gen( :string => 'something' ).should be_awesome
-Comment.gen( :user => User.gen ).should be_cool
+Name.gen(:string => 'something').should be_awesome
+Comment.gen(:user => User.gen).should be_cool
 User.gen.should do_some_stuff_with(:things)
 ```
 
