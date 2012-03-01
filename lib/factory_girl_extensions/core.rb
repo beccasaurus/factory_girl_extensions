@@ -1,5 +1,3 @@
-require "factory_girl_extensions/version"
-
 module FactoryGirl
   module Syntax
 
@@ -149,3 +147,10 @@ module FactoryGirl
     end
   end
 end
+
+# Alias FactoryGirl::Syntax::ObjectMethods (which is named to be conventional with the official FactoryGirl syntaxes) 
+# to FactoryGirlExtensions so it's easy for users to manually extend custom classes without having to remember the 
+# unintuitive name of the real module.  We'll deprecate FactoryGirlExtensions if we get this merged into FactoryGirl.
+FactoryGirlExtensions = FactoryGirl::Syntax::ObjectMethods
+
+require "factory_girl_extensions/version"

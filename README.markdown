@@ -17,7 +17,7 @@ As of version 2.0, factory_girl_extensions now targets the new FactoryGirl 2.0 A
 ## Usage
 
 ```ruby
-require 'factory_girl_extensions'
+require 'factory_girl_extensions' # This includes custom methods in every Class.  See below to customize this.
 
 FactoryGirl.define do
   factory :user do
@@ -74,6 +74,27 @@ User.generate(:admin, :with_profile)
 User.generate(:admin, :with_profile, :name => 'Custom name')
 
 # User.build and User.attributes also support these custom prefix/suffixes.
+```
+
+### Extend custom classes with FactoryGirlExtensions
+
+When you `require "factory_girl_extensions"`, we include custom methods (build/generate/etc) into 
+every class by calling:
+
+```ruby
+require "factory_girl_extensions/core"
+
+Class.send :include, FactoryGirlExtensions
+```
+
+If you don't want all of your classes to be polluted with these methods (for example, you only want 
+to extend your ActiveRecord::Base classes with these methods), you can simply:
+
+```ruby
+# don't require factory_girl_extensions!  require factory_girl_extensions/core instead.
+require "factory_girl_extensions/core"
+
+ActiveRecord::Base.send :extend, FactoryGirlExtensions
 ```
 
 ## Why User.gen instead of FactoryGirl(:user)?

@@ -12,7 +12,7 @@ require "rspec"
 
 # Example class
 class Dog
-  extend FactoryGirl::Syntax::ObjectMethods
+  extend FactoryGirlExtensions
 
   attr_accessor :name, :saved
 
