@@ -74,6 +74,16 @@ User.generate(:admin, :with_profile)
 User.generate(:admin, :with_profile, :name => 'Custom name')
 
 # User.build and User.attributes also support these custom prefix/suffixes.
+
+# Factories with custom names are supported as well
+FactoryGirl.define do
+  factory :unverified_user, :class => :user do
+    verified false
+  end
+end
+
+# Generates the :unverified_user factory
+User.generate(:unverified)
 ```
 
 ### Extend custom classes with FactoryGirlExtensions
